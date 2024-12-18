@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  vote:
+    container_name: vote
+    image: programmer175/voteapp_vote:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  worker:
+    container_name: worker
+    image: programmer175/voteapp_worker:latest
+    depends_on:
+      - redis
+      - db
+
+  result:
+    container_name: result
+    image: programmer175/voteapp_result:latest
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+
+  db:
+    container_name: db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
